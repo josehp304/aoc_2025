@@ -1,4 +1,3 @@
-let a = -999 / 100;
-let b = Math.floor(-999 / 100);
-console.log("a is : ", a);
-console.log(b);
+let arr = [1, 2, 3, 4, 5];
+console.log(arr.slice(1, 4)); // [2, 3, 4]
+console.log(arr.slice(0, 2)); // [1, 2]
