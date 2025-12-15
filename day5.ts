@@ -4,7 +4,7 @@ import * as path from "path";
 let rawData = fs
   .readFileSync(path.join(__dirname, "input.txt"), "utf-8")
   .trim()
-  .split(/\r\n\r\n/);
+  .split(/\r?\n\r?\n/);
 function mergeSort(arr: number[], left: number, right: number) {
   function merge(
     arr: number[],
