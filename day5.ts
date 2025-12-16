@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { start } from "repl";
 
 let rawData = fs
   .readFileSync(path.join(__dirname, "input.txt"), "utf-8")
@@ -88,27 +89,64 @@ let ids: number[] = rawIds
   .split(/\r?\n/)
   .map((e) => parseInt(e, 10));
 mergeSort(ids, 0, ids.length - 1);
-let result = 0;
-for (let range of ranges) {
-  while (ids.length > 0) {
-    let id = ids[0];
-    let low = range[0];
-    let high = range[1];
-    if (id && low && high) {
-      console.log({ id, low, high });
-      if (id >= low && id <= high) {
-        result++;
-        ids.shift();
-        console.log("match", result);
-      } else if (id > high) {
-        console.log("high");
-        break;
-      } else {
-        console.log("low");
-        ids.shift();
+
+function part1() {
+  let result = 0;
+  for (let range of ranges) {
+    while (ids.length > 0) {
+      let id = ids[0];
+      let low = range[0];
+      let high = range[1];
+      if (id && low && high) {
+        console.log({ id, low, high });
+        if (id >= low && id <= high) {
+          result++;
+          ids.shift();
+          console.log("match", result);
+        } else if (id > high) {
+          console.log("high");
+          break;
+        } else {
+          console.log("low");
+          ids.shift();
+        }
       }
     }
   }
+
+  console.log(result);
 }
 
-console.log(result);
+function part2() {
+  const first = ranges[0];
+  let result = 0;
+  let currentEnd = 0;
+  if (first) {
+    let currentStart = first[0];
+    if (first[1] != undefined) currentEnd = first[1];
+    if (currentStart != undefined && currentEnd != undefined) {
+      result += currentEnd - currentStart + 1;
+    }
+  }
+  for (let i = 1; i < ranges.length; i++) {
+    const start = ranges[i]![0];
+    const end = ranges[i]![1];
+    const prevEnd: number = currentEnd;
+    if (start != undefined && end != undefined) {
+      if (prevEnd && prevEnd >= end) {
+        console.log("edgecase");
+        currentEnd = prevEnd;
+        continue;
+      }
+      if (prevEnd && prevEnd >= start) {
+        result += end - prevEnd;
+      } else {
+        result += end - start + 1;
+      }
+      currentEnd = end;
+    }
+  }
+  console.log(result);
+}
+
+part2();
